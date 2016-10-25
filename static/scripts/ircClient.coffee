@@ -9,6 +9,34 @@ document.addEventListener('DOMContentLoaded', ->
 	server = myLayout.root.getItemsById('server')[0]
 	serverOutput = server.element[0].querySelector('.output')
 
+	window.removeDoubleWhite = (line) ->
+		if line.search("  ") != -1
+			removeDoubleWhite(line.replace("  "," "))
+		else
+			return line
+
+	window.parseIncoming = (rawline) -> 
+		result = {}
+		headerPart = ""
+		line = rawline.trim()
+		if line.startsWith(":")
+			line = line[1..]
+			result.who = line.split(" ")[0]
+			line = line[result.who.len+1..]
+
+		if line.search(" :") != -1 # Read trailer
+		  result.trailer = line.split(" :")[1..].join(" :") # TODO bug wenn " :" geschrieben wird??
+		  headerPart = line.split(" :")[0]	 # TODO bug wenn " :" geschrieben wird??
+		else
+		  result.trailer = ""
+		  headerPart = line	
+		lineParts = removeDoubleWhite(headerPart).trim().split(" ")
+		result.command = lineParts[1] # todo parse if command is valide
+		result.params = lineParts[2..]
+		result.raw = rawline
+		return result
+
+
 	main = (server, user, nick) -> 
 		window.connection = new WebSocket('ws://' + server, ['irc'])
 		# alert("foo")
@@ -22,10 +50,12 @@ document.addEventListener('DOMContentLoaded', ->
 
 		connection.onmessage = (event) ->
 			console.log('Server: ' + event.data)
+			console.log(parseIncoming(event.data))
 
 			div = document.createElement('div')
 			div.innerText = event.data
 			serverOutput.appendChild(div)
+			serverOutput.scrollTop = serverOutput.scrollHeight
 			# serverOutput.
 
 			# handle ping 

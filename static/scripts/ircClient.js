@@ -4,6 +4,36 @@
     var main, server, serverOutput;
     server = myLayout.root.getItemsById('server')[0];
     serverOutput = server.element[0].querySelector('.output');
+    window.removeDoubleWhite = function(line) {
+      if (line.search("  ") !== -1) {
+        return removeDoubleWhite(line.replace("  ", " "));
+      } else {
+        return line;
+      }
+    };
+    window.parseIncoming = function(rawline) {
+      var headerPart, line, lineParts, result;
+      result = {};
+      headerPart = "";
+      line = rawline.trim();
+      if (line.startsWith(":")) {
+        line = line.slice(1);
+        result.who = line.split(" ")[0];
+        line = line.slice(result.who.len + 1);
+      }
+      if (line.search(" :") !== -1) {
+        result.trailer = line.split(" :").slice(1).join(" :");
+        headerPart = line.split(" :")[0];
+      } else {
+        result.trailer = "";
+        headerPart = line;
+      }
+      lineParts = removeDoubleWhite(headerPart).trim().split(" ");
+      result.command = lineParts[1];
+      result.params = lineParts.slice(2);
+      result.raw = rawline;
+      return result;
+    };
     main = function(server, user, nick) {
       window.connection = new WebSocket('ws://' + server, ['irc']);
       connection.onopen = function() {
@@ -15,9 +45,11 @@
       return connection.onmessage = function(event) {
         var div, pongReply;
         console.log('Server: ' + event.data);
+        console.log(parseIncoming(event.data));
         div = document.createElement('div');
         div.innerText = event.data;
         serverOutput.appendChild(div);
+        serverOutput.scrollTop = serverOutput.scrollHeight;
         if (event.data.startsWith("PING")) {
           console.log("send pong reply");
           pongReply = "PONG" + event.data.slice(4) + "\n";

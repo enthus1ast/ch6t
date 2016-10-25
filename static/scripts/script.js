@@ -96,7 +96,8 @@
 
   window.config = {
     settings: {
-      hasHeaders: true
+      hasHeaders: true,
+      showPopoutIcon: false
     },
     content: [
       {
@@ -114,10 +115,36 @@
     return container.getElement().html(channelWindow);
   });
 
+  window.sendFunction = function(msg, room) {
+    if (msg.trim().startsWith("/")) {
+      return connection.send(msg.slice(1) + "\n");
+    } else {
+      return connection.send("privmsg " + room + " :" + msg + "\n");
+    }
+  };
+
   myLayout.registerComponent('privateWindow', function(container, state) {
-    var privateWindow;
+    var getDataAndClean, privateWindow;
     container._config.title = state.room;
     privateWindow = document.querySelector('#templates > .privateWindow').cloneNode(true);
+    getDataAndClean = function() {
+      var div, msg;
+      msg = privateWindow.querySelector("input").value;
+      sendFunction(msg, state.room);
+      privateWindow.querySelector("input").value = "";
+      div = document.createElement('div');
+      div.innerText = msg;
+      privateWindow.querySelector(".output").appendChild(div);
+      return privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight;
+    };
+    privateWindow.querySelector("button").onclick = function() {
+      return getDataAndClean();
+    };
+    privateWindow.querySelector("input").onkeyup = function(event) {
+      if (event.which === 13) {
+        return getDataAndClean();
+      }
+    };
     return container.getElement().html(privateWindow);
   });
 

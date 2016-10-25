@@ -56,6 +56,12 @@ input {
   height:25px;
   background-color: green;
 }
+.channelWindow .input {
+  display: inline-block;
+}
+.channelWindow .commands {
+  display: inline-block;
+}
 
 
 .privateWindow {
@@ -77,4 +83,10 @@ input {
 .privateWindow .lower {
   height:25px;
   background-color: green;
+}
+.privateWindow .input {
+  display: inline-block;
+}
+.privateWindow .commands {
+  display: inline-block;
 }

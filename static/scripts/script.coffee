@@ -171,6 +171,7 @@ window.menu = {
 window.config = {
   settings: {
       hasHeaders: true
+      showPopoutIcon: false
     }       
   content: [
     {
@@ -195,9 +196,33 @@ myLayout.registerComponent('channelWindow', (container, state) ->
   container.getElement().html(channelWindow)
 )
 
+window.sendFunction = (msg,room) ->
+  if msg.trim().startsWith("/")
+    connection.send(msg[1..] + "\n")
+  else
+    connection.send("privmsg #{room} :#{msg}\n")
+
+
 myLayout.registerComponent('privateWindow', (container, state) ->
   container._config.title = state.room
   privateWindow = document.querySelector('#templates > .privateWindow').cloneNode(true);
+  
+  getDataAndClean = ->
+    msg = privateWindow.querySelector("input").value
+    sendFunction(msg,state.room)
+    privateWindow.querySelector("input").value = ""
+    div = document.createElement('div')
+    div.innerText = msg
+    privateWindow.querySelector(".output").appendChild(div)
+    privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
+    
+  privateWindow.querySelector("button").onclick = ->
+    getDataAndClean()
+
+  privateWindow.querySelector("input").onkeyup = (event) ->
+    if ( event.which == 13 )
+      getDataAndClean()
+    
   container.getElement().html(privateWindow)
 )
 
