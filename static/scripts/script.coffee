@@ -71,6 +71,14 @@
 #   }]
 # }
 
+`window.clone = function (obj) {
+    if(obj == null || typeof(obj) != 'object')
+        return obj;    
+    var temp = new obj.constructor(); 
+    for(var key in obj)
+        temp[key] = clone(obj[key]);    
+    return temp;
+}`
 
 writeWin = {
   type: 'component',
@@ -198,9 +206,10 @@ window.openChatWindow = (roomname) ->
 
 
     # TODO BUG BUG this is not copying by value der hurensohn
-    newRoom = chatWin2.valueOf()  # new copy of private msg TODO atm no channel rooms 
+    # newRoom = chatWin2.valueOf()  # new copy of private msg TODO atm no channel rooms 
     # how the fucking fuck is one copying a object by value.
     # JSON.stringify and JSON.parse works bug this if fuck as fuck
+    newRoom = clone(chatWin2)
 
 
     newRoom.id = roomname
