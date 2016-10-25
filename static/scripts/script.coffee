@@ -182,8 +182,6 @@ window.config = {
   ]
 }
 
-
-
 window.myLayout = new GoldenLayout(config)
 
 myLayout.registerComponent('channelWindow', (container, state) ->
@@ -197,7 +195,14 @@ window.openChatWindow = (roomname) ->
   ## chat window / channel `roomname`
   if myLayout.root.getItemsById(roomname).length == 0
     ## there is no room, create one
-    newRoom = chatWin2.valueOf()  # new copy of private msg TODO atm no channel rooms
+
+
+    # TODO BUG BUG this is not copying by value der hurensohn
+    newRoom = chatWin2.valueOf()  # new copy of private msg TODO atm no channel rooms 
+    # how the fucking fuck is one copying a object by value.
+    # JSON.stringify and JSON.parse works bug this if fuck as fuck
+
+
     newRoom.id = roomname
     newRoom.title = roomname
     newRoom.componentState.room = roomname
@@ -208,9 +213,6 @@ window.openChatWindow = (roomname) ->
     ## there is a room name `roomname`
     ## just return the handle
     return myLayout.root.getItemsById(roomname)[0]
-
-
-
 
 window.sendFunction = (msg,room) ->
   if msg.trim().startsWith("/")
@@ -261,8 +263,6 @@ myLayout.registerComponent('menu', (container, state) ->
     --><input type="text" placeholder="Room.."><!--
     --><button>Join</button>  
   </div>""")
-
-
 )
 
 myLayout.init()
