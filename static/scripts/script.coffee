@@ -176,15 +176,11 @@ window.config = {
   content: [
     {
     type: 'column'
-    content: [menu,serverWindow,serverWindow2,serverWindow]
+    # content: [menu,serverWindow,serverWindow2,serverWindow]
+    content: [menu,serverWindow2]
     }
   ]
 }
-
-
-# config = {
-#   content: [  ]
-# }
 
 
 
@@ -195,6 +191,26 @@ myLayout.registerComponent('channelWindow', (container, state) ->
   channelWindow = document.querySelector('#templates > .channelWindow').cloneNode(true);
   container.getElement().html(channelWindow)
 )
+
+window.openChatWindow = (roomname) ->
+  ## this creates or returns a handle to the 
+  ## chat window / channel `roomname`
+  if myLayout.root.getItemsById(roomname).length == 0
+    ## there is no room, create one
+    newRoom = chatWin2.valueOf()  # new copy of private msg TODO atm no channel rooms
+    newRoom.id = roomname
+    newRoom.title = roomname
+    newRoom.componentState.room = roomname
+    myLayout.root.contentItems[0].addChild(newRoom)
+    return myLayout.root.getItemsById(roomname)[0]
+    # return newRoom
+  else
+    ## there is a room name `roomname`
+    ## just return the handle
+    return myLayout.root.getItemsById(roomname)[0]
+
+
+
 
 window.sendFunction = (msg,room) ->
   if msg.trim().startsWith("/")

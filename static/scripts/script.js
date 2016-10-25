@@ -102,7 +102,7 @@
     content: [
       {
         type: 'column',
-        content: [menu, serverWindow, serverWindow2, serverWindow]
+        content: [menu, serverWindow2]
       }
     ]
   };
@@ -114,6 +114,20 @@
     channelWindow = document.querySelector('#templates > .channelWindow').cloneNode(true);
     return container.getElement().html(channelWindow);
   });
+
+  window.openChatWindow = function(roomname) {
+    var newRoom;
+    if (myLayout.root.getItemsById(roomname).length === 0) {
+      newRoom = chatWin2.valueOf();
+      newRoom.id = roomname;
+      newRoom.title = roomname;
+      newRoom.componentState.room = roomname;
+      myLayout.root.contentItems[0].addChild(newRoom);
+      return myLayout.root.getItemsById(roomname)[0];
+    } else {
+      return myLayout.root.getItemsById(roomname)[0];
+    }
+  };
 
   window.sendFunction = function(msg, room) {
     if (msg.trim().startsWith("/")) {

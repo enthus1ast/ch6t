@@ -37,9 +37,28 @@ document.addEventListener('DOMContentLoaded', ->
 		return result
 
 
+	window.appendToRoom = (room,ircLineIn) ->
+		## this appends a ircLineIn to a room window,
+		## query the room
+		room = ""
+
+		## generate the line
+		recvDateObj = new Date()
+		recvTime = "#{recvDateObj.getHours()}:#{recvDateObj.getMinutes()}"
+		line = "[#{recvTime}] <#{ircLineIn.who}> #{ircLineIn.trailer}"
+		roomDom = openChatWindow(ircLineIn.params[0])
+
+		div = document.createElement('div')
+		div.innerText = line
+
+		roomDomOutput = roomDom.element[0].querySelector('.output')
+		roomDomOutput.appendChild(div)
+		roomDomOutput.scrollTop = roomDomOutput.scrollHeight		
+
+		## append to window
+
 	main = (server, user, nick) -> 
 		window.connection = new WebSocket('ws://' + server, ['irc'])
-		# alert("foo")
 
 		connection.onopen = ->
 			connection.send('USER ' + user + ' * * *\n')
@@ -50,7 +69,8 @@ document.addEventListener('DOMContentLoaded', ->
 
 		connection.onmessage = (event) ->
 			console.log('Server: ' + event.data)
-			console.log(parseIncoming(event.data))
+			ircLineIn = parseIncoming(event.data)
+			console.log(ircLineIn)
 
 			div = document.createElement('div')
 			div.innerText = event.data
@@ -63,6 +83,18 @@ document.addEventListener('DOMContentLoaded', ->
 				console.log("send pong reply")
 				pongReply = "PONG" + event.data.slice(4) + "\n"
 				connection.send(pongReply)
+
+			if ircLineIn.command == "PRIVMSG"
+				## we have to open a chatwindow
+				## if none was opened yet.
+				## if a corresponding chatwindow was opened 
+				## we just append the privmsg to this window
+				console.log("we've got privmsg")
+				appendToRoom(ircLineIn.params[0], ircLineIn)
+				
+
+
+
 			
 
 

@@ -34,6 +34,19 @@
       result.raw = rawline;
       return result;
     };
+    window.appendToRoom = function(room, ircLineIn) {
+      var div, line, recvDateObj, recvTime, roomDom, roomDomOutput;
+      room = "";
+      recvDateObj = new Date();
+      recvTime = (recvDateObj.getHours()) + ":" + (recvDateObj.getMinutes());
+      line = "[" + recvTime + "] <" + ircLineIn.who + "> " + ircLineIn.trailer;
+      roomDom = openChatWindow(ircLineIn.params[0]);
+      div = document.createElement('div');
+      div.innerText = line;
+      roomDomOutput = roomDom.element[0].querySelector('.output');
+      roomDomOutput.appendChild(div);
+      return roomDomOutput.scrollTop = roomDomOutput.scrollHeight;
+    };
     main = function(server, user, nick) {
       window.connection = new WebSocket('ws://' + server, ['irc']);
       connection.onopen = function() {
@@ -43,9 +56,10 @@
         return connection.send('join #lobby\n');
       };
       return connection.onmessage = function(event) {
-        var div, pongReply;
+        var div, ircLineIn, pongReply;
         console.log('Server: ' + event.data);
-        console.log(parseIncoming(event.data));
+        ircLineIn = parseIncoming(event.data);
+        console.log(ircLineIn);
         div = document.createElement('div');
         div.innerText = event.data;
         serverOutput.appendChild(div);
@@ -53,7 +67,11 @@
         if (event.data.startsWith("PING")) {
           console.log("send pong reply");
           pongReply = "PONG" + event.data.slice(4) + "\n";
-          return connection.send(pongReply);
+          connection.send(pongReply);
+        }
+        if (ircLineIn.command === "PRIVMSG") {
+          console.log("we've got privmsg");
+          return appendToRoom(ircLineIn.params[0], ircLineIn);
         }
       };
     };
