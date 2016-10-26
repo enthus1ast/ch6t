@@ -246,9 +246,8 @@ window.myLayout.registerComponent('menu', (container, state) ->
 
   container.getElement()[0].querySelector('button[name="join"]').onclick = ->
     roomToJoin = container.getElement()[0].querySelector('input[name="room"]')
-    window.sendFunction("/join " + roomToJoin.value)
+    sendFunction("/join " + roomToJoin.value)
     roomToJoin.value = ""
-
 )
 
 window.myLayout.init()
