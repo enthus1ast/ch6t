@@ -20,7 +20,7 @@
 
 
     <div name="menu">
-      ch6t
+      <span name="ch6t">ch6t</span>
       <input name="user" type="text" placeholder="User.."><!--
       --><input name="nick" type="text" placeholder="Nick.."><!--
       --><button name="connect">Connect</button><!--
@@ -29,7 +29,7 @@
     </div>
 
 
-    <div name="channelWindow" class="channelWindow">
+    <div name="channelWindow" class="window">
       <div class="upper">
         <div class="output">
           Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
@@ -50,21 +50,23 @@
         <div class="commands">
           <button class="send">Send</button>
         </div>
+        <div class="clear"></div>
       </div>
     </div>
 
 
-    <div name="privateWindow" class="privateWindow">
+    <div name="privateWindow" class="window">
       <div class="upper">
         <div class="output"></div>
       </div>
       <div class="lower">
         <div class="input">
-          <input type="text">
+          <input name="message" type="text">
         </div>
         <div class="commands">
-          <button class="send">Send</button>
+          <button name="send">Send</button>
         </div>
+        <div class="clear"></div>
       </div>
     </div>
 
