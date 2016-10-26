@@ -12,7 +12,7 @@
 
 #         # type: 'row',
 #         # content: [{type:'component', componentName: 'channelWindow' , title: "server"}]
-#         # },        
+#         # },
 
 #       {
 #         type:'component',
@@ -71,24 +71,24 @@
 #   }]
 # }
 
-`window.clone = function (obj) {
-    if(obj == null || typeof(obj) != 'object')
-        return obj;    
-    var temp = new obj.constructor(); 
-    for(var key in obj)
-        temp[key] = clone(obj[key]);    
-    return temp;
-}`
+window.clone = (obj) ->
+  if(obj is null or typeof(obj) isnt 'object')
+    return obj
+  temp = new obj.constructor()
+  for key in obj
+    temp[key] = window.clone(obj[key])
+  return temp
+
 
 writeWin = {
   type: 'component',
   componentName: 'channelWindow',
   isClosable: false
-  reorderEnabled:false
+  reorderEnabled: false
   showPopoutIcon: false
-  showCloseIcon: false  
+  showCloseIcon: false
   showMaximiseIcon: false
-  componentState: { room: 'writeWin' }  
+  componentState: { room: 'writeWin' }
 }
 
 chatWin = {
@@ -97,9 +97,9 @@ chatWin = {
   showPopoutIcon: false
   showCloseIcon: false
   isClosable: false
-  reorderEnabled:true
+  reorderEnabled: true
   showMaximiseIcon: false
-  componentState: { room: 'chatWin' }  
+  componentState: { room: 'chatWin' }
 }
 window.chatWin2 = {
   id: 'server',
@@ -108,57 +108,39 @@ window.chatWin2 = {
   showPopoutIcon: false
   showCloseIcon: false
   isClosable: false
-  reorderEnabled:true
+  reorderEnabled: true
   showMaximiseIcon: false
-  componentState: { room: 'chatWin' }  
+  componentState: { room: 'chatWin' }
 }
 
 userlistWin = {
   type: 'component'
   width: 20
   componentName: 'channelWindow',
-  componentState: { room: 'userlistWin' }  
+  componentState: { room: 'userlistWin' }
 }
 
 
 serverWindow = {
   type: "column"
-  content:[
-    {
-      type: "column"
-      componentName: 'channelWindow',      
-      content: [
-        {
-          type: "row"
-          content: [chatWin]
-        },
-        # {
-        #   type: "row"
-        #   height: 20,
-        #   content: [writeWin]
-        # }
-      ]
-    }
-  ]
+  content: [{
+    type: "column"
+    componentName: 'channelWindow',
+    content: [{
+      type: "row"
+      content: [chatWin]
+    }]
+  }]
 }
 serverWindow2 = {
   type: "column"
-  content:[
-    {
-      type: "column"
-      content: [
-        {
-          type: "row"
-          content: [chatWin2]
-        },
-        # {
-        #   type: "row"
-        #   height: 20,
-        #   content: [writeWin]
-        # }
-      ]
-    }
-  ]
+  content: [{
+    type: "column"
+    content: [{
+      type: "row"
+      content: [window.chatWin2]
+    }]
+  }]
 }
 
 
@@ -170,86 +152,78 @@ channelWindow = {
 
 window.menu = {
   type: 'component'
-  componentName: 'menu'  
+  componentName: 'menu'
   height: 10
-  componentState: { }  
-
+  componentState: { }
 }
 
 window.config = {
   settings: {
-      hasHeaders: true
-      showPopoutIcon: false
-    }       
-  content: [
-    {
+    hasHeaders: true
+    showPopoutIcon: false
+  }
+  content: [{
     type: 'column'
     # content: [menu,serverWindow,serverWindow2,serverWindow]
-    content: [menu,serverWindow2]
-    }
-  ]
+    content: [window.menu,serverWindow2]
+  }]
 }
 
-window.myLayout = new GoldenLayout(config)
+window.myLayout = new window.GoldenLayout(config)
 
-myLayout.registerComponent('channelWindow', (container, state) ->
+window.myLayout.registerComponent('channelWindow', (container, state) ->
   container._config.title = state.room
-  channelWindow = document.querySelector('#templates > .channelWindow').cloneNode(true);
+  channelWindow = document.querySelector('#templates > [name="channelWindow"]').cloneNode(true)
   container.getElement().html(channelWindow)
 )
 
 window.openChatWindow = (roomname) ->
-  ## this creates or returns a handle to the 
+  ## this creates or returns a handle to the
   ## chat window / channel `roomname`
-  if myLayout.root.getItemsById(roomname).length == 0
+  if window.myLayout.root.getItemsById(roomname).length == 0
     ## there is no room, create one
 
-
-    # TODO BUG BUG this is not copying by value der hurensohn
-    # newRoom = chatWin2.valueOf()  # new copy of private msg TODO atm no channel rooms 
-    # how the fucking fuck is one copying a object by value.
-    # JSON.stringify and JSON.parse works bug this if fuck as fuck
     newRoom = clone(chatWin2)
 
 
     newRoom.id = roomname
     newRoom.title = roomname
     newRoom.componentState.room = roomname
-    myLayout.root.contentItems[0].addChild(newRoom)
-    return myLayout.root.getItemsById(roomname)[0]
+    window.myLayout.root.contentItems[0].addChild(newRoom)
+    return window.myLayout.root.getItemsById(roomname)[0]
     # return newRoom
   else
     ## there is a room name `roomname`
     ## just return the handle
-    return myLayout.root.getItemsById(roomname)[0]
+    return window.myLayout.root.getItemsById(roomname)[0]
 
 window.sendFunction = (msg,room) ->
   if msg.trim().startsWith("/")
-    connection.send(msg[1..] + "\n")
+    window.connection.send(msg[1..] + "\n")
   else
-    connection.send("privmsg #{room} :#{msg}\n")
+    window.connection.send("privmsg #{room} :#{msg}\n")
 
 
-myLayout.registerComponent('privateWindow', (container, state) ->
+window.myLayout.registerComponent('privateWindow', (container, state) ->
   container._config.title = state.room
-  privateWindow = document.querySelector('#templates > .privateWindow').cloneNode(true);
-  
+  privateWindow = document.querySelector('#templates > [name="privateWindow"]').cloneNode(true)
+
   getDataAndClean = ->
     msg = privateWindow.querySelector("input").value
-    sendFunction(msg,state.room)
+    window.sendFunction(msg, state.room)
     privateWindow.querySelector("input").value = ""
     div = document.createElement('div')
     div.innerText = msg
     privateWindow.querySelector(".output").appendChild(div)
     privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
-    
+
   privateWindow.querySelector("button").onclick = ->
     getDataAndClean()
 
   privateWindow.querySelector("input").onkeyup = (event) ->
     if ( event.which == 13 )
       getDataAndClean()
-    
+
   container.getElement().html(privateWindow)
 )
 
@@ -257,21 +231,15 @@ myLayout.registerComponent('menu', (container, state) ->
   console.log(container)
   # container._config.title = state.room
   # container.getElement().html()
-  # chatWidget = 
+  # chatWidget =
   # writeWidget = ""
   # container.getElement().html( '<div>' + state.room + '</div>')
   # template = document.querySelector('#newTemplate');
   # container.getElement().html("ich bins menu")
 
-
-  container.getElement().html("""<div id="newTemplateMenu" class="templateMenu">
-    ch6t
-    <input type="text" placeholder="User.."><!--
-    --><input type="text" placeholder="Nick.."><!--
-    --><button>Connect</button><!--
-    --><input type="text" placeholder="Room.."><!--
-    --><button>Join</button>  
-  </div>""")
+  #menu
+  menu = document.querySelector('#templates > [name="menu"]').cloneNode(true)
+  container.getElement().html(menu)
 )
 
 myLayout.init()
