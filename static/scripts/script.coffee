@@ -3,7 +3,7 @@ window.clone = (obj) ->
     return obj
 
   if obj instanceof Date
-    return new Date(obj.getTime()) 
+    return new Date(obj.getTime())
 
   if obj instanceof RegExp
     flags = ''
@@ -11,7 +11,7 @@ window.clone = (obj) ->
     flags += 'i' if obj.ignoreCase?
     flags += 'm' if obj.multiline?
     flags += 'y' if obj.sticky?
-    return new RegExp(obj.source, flags) 
+    return new RegExp(obj.source, flags)
 
   newInstance = new obj.constructor()
 
@@ -21,116 +21,29 @@ window.clone = (obj) ->
   return newInstance
 
 
-writeWin = {
-  type: 'component',
-  componentName: 'channelWindow',
-  isClosable: false
-  reorderEnabled: false
-  showPopoutIcon: false
-  showCloseIcon: false
-  showMaximiseIcon: false
-  componentState: { room: 'writeWin' }
-}
-
-chatWin = {
-  type: 'component',
-  componentName: 'channelWindow',
-  showPopoutIcon: false
-  showCloseIcon: false
-  isClosable: false
-  reorderEnabled: true
-  showMaximiseIcon: false
-  componentState: { room: 'chatWin' }
-}
-window.chatWin2 = {
-  id: 'server',
-  type: 'component',
-  componentName: 'privateWindow',
-  showPopoutIcon: false
-  showCloseIcon: true
-  isClosable: true
-  reorderEnabled: true
-  showMaximiseIcon: true
-  componentState: { room: 'chatWin' }
-}
-
-userlistWin = {
-  type: 'component'
-  width: 20
-  componentName: 'channelWindow',
-  componentState: { room: 'userlistWin' }
-}
 
 
-serverWindow = {
-  type: "column"
-  content: [{
-    type: "column"
-    componentName: 'channelWindow',
-    content: [{
-      type: "row"
-      content: [chatWin]
-    }]
-  }]
-}
-serverWindow2 = {
-  type: "column"
-  content: [{
-    type: "column"
-    content: [{
-      type: "row"
-      content: [window.chatWin2]
-    }]
-  }]
-}
-
-
-channelWindow = {
-  type: "column"
-  content: []
-}
-
-
-window.menu = {
-  type: 'component'
-  componentName: 'menu'
-  height: 10
-  componentState: { }
-}
-
-window.config = {
-  settings: {
-    hasHeaders: true
-    showPopoutIcon: false
-    showExitIcon: true
-  }
-  content: [{
-    type: 'stack'
-    # content: [menu,serverWindow,serverWindow2,serverWindow]
-    content: [window.menu,serverWindow2]
-  }]
-}
 
 window.myLayout = new window.GoldenLayout(config)
 
-window.myLayout.registerComponent('channelWindow', (container, state) ->
+window.myLayout.registerComponent('ChannelWindow', (container, state) ->
   container._config.title = state.room
   channelWindow = document.querySelector('#templates > [name="channelWindow"]').cloneNode(true)
   container.getElement().html(channelWindow)
 )
 
-window.openChatWindow = (roomname) ->
+window.openChannelWindow = (roomname) ->
   ## this creates or returns a handle to the
   ## chat window / channel `roomname`
   if window.myLayout.root.getItemsById(roomname).length == 0
     ## there is no room widged, create one
-    newRoom = clone(window.chatWin2)
-    newRoom.id = roomname
-    newRoom.title = roomname
-    newRoom.componentState.room = roomname
-    window.myLayout.root.contentItems[0].addChild(newRoom)
+    room = new window.Templates.PrivateWindow().AsDict
+    room.id = roomname
+    room.title = roomname
+    room.componentState.room = roomname
+    window.myLayout.root.contentItems[0].addChild(room)
     return window.myLayout.root.getItemsById(roomname)[0]
-    # return newRoom
+    # return room
   else
     ## there is a room name `roomname`
     ## just return the handle
@@ -143,7 +56,7 @@ window.sendFunction = (msg,room) ->
     window.connection.send("privmsg #{room} :#{msg}\n")
 
 
-window.myLayout.registerComponent('privateWindow', (container, state) ->
+window.myLayout.registerComponent('PrivateWindow', (container, state) ->
   container._config.title = state.room
   privateWindow = document.querySelector('#templates > [name="privateWindow"]').cloneNode(true)
 
@@ -169,7 +82,7 @@ window.myLayout.registerComponent('privateWindow', (container, state) ->
   container.getElement().html(privateWindow)
 )
 
-window.myLayout.registerComponent('menu', (container, state) ->
+window.myLayout.registerComponent('MenuWindow', (container, state) ->
   console.log(container)
   # container._config.title = state.room
   # container.getElement().html()
