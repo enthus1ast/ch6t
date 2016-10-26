@@ -183,7 +183,7 @@ window.openChatWindow = (roomname) ->
   if window.myLayout.root.getItemsById(roomname).length == 0
     ## there is no room, create one
 
-    newRoom = clone(chatWin2)
+    newRoom = window.clone(window.chatWin2)
 
 
     newRoom.id = roomname
@@ -227,7 +227,7 @@ window.myLayout.registerComponent('privateWindow', (container, state) ->
   container.getElement().html(privateWindow)
 )
 
-myLayout.registerComponent('menu', (container, state) ->
+window.myLayout.registerComponent('menu', (container, state) ->
   console.log(container)
   # container._config.title = state.room
   # container.getElement().html()
@@ -235,13 +235,22 @@ myLayout.registerComponent('menu', (container, state) ->
   # writeWidget = ""
   # container.getElement().html( '<div>' + state.room + '</div>')
   # template = document.querySelector('#newTemplate');
+
   # container.getElement().html("ich bins menu")
 
   #menu
   menu = document.querySelector('#templates > [name="menu"]').cloneNode(true)
   container.getElement().html(menu)
+  container.getElement()[0].querySelector('button[name="connect"]').onclick = ->
+    alert "Connect"
+
+  container.getElement()[0].querySelector('button[name="join"]').onclick = ->
+    roomToJoin = container.getElement()[0].querySelector('input[name="room"]')
+    window.sendFunction("/join " + roomToJoin.value)
+    roomToJoin.value = ""
+
 )
 
-myLayout.init()
+window.myLayout.init()
 
 # myLayout.root.addChild(oneWidget)
