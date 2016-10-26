@@ -117,6 +117,18 @@ document.addEventListener('DOMContentLoaded', ->
 				## :klausuggu PART #lobby
 				appendStatusMessage(ircLineIn.params[0], m("part", ircLineIn.who, ircLineIn.params[0]))
 
+			if ircLineIn.command == "NICK"
+				## :ha NICK :sn0re
+				## TODO atm we don't know wich user are in the channels
+				## so we dont know to wich channel we should post this message
+				console.log("NICK not implemented yet")
+
+			if ircLineIn.command == "353"
+				## answer to NAMES
+				# :ch4t.code0.xyz 353 astoll @ #lobby :dkrause astoll fla
+				# appendStatusMessage(ircLineIn.params[2], ircLineIn.trailer ) # m("353", ircLineIn.who, ircLineIn.params[0]))
+				appendStatusMessage(ircLineIn.params[2],  m("353", ircLineIn.trailer )) # m("353", ircLineIn.who, ircLineIn.params[0]))
+
 
 
 

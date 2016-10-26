@@ -47,10 +47,10 @@ window.chatWin2 = {
   type: 'component',
   componentName: 'privateWindow',
   showPopoutIcon: false
-  showCloseIcon: false
-  isClosable: false
+  showCloseIcon: true
+  isClosable: true
   reorderEnabled: true
-  showMaximiseIcon: false
+  showMaximiseIcon: true
   componentState: { room: 'chatWin' }
 }
 
