@@ -261,17 +261,22 @@ myLayout.registerComponent('menu', (container, state) ->
   # writeWidget = ""
   # container.getElement().html( '<div>' + state.room + '</div>')
   # template = document.querySelector('#newTemplate');
-  # container.getElement().html("ich bins menu")
-
-
   container.getElement().html("""<div id="newTemplateMenu" class="templateMenu">
     ch6t
     <input type="text" placeholder="User.."><!--
     --><input type="text" placeholder="Nick.."><!--
-    --><button>Connect</button><!--
-    --><input type="text" placeholder="Room.."><!--
-    --><button>Join</button>  
+    --><button name="connect">Connect</button><!--
+    --><input name="room" type="text" placeholder="Room.."><!--
+    --><button name="join">Join</button>  
   </div>""")
+
+  container.getElement()[0].querySelector('button[name="connect"]').onclick = ->
+    alert "Connect"
+
+  container.getElement()[0].querySelector('button[name="join"]').onclick = ->
+    roomToJoin = container.getElement()[0].querySelector('input[name="room"]')
+    sendFunction("/join " + roomToJoin.value)
+    roomToJoin.value = ""
 )
 
 myLayout.init()

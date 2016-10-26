@@ -89,8 +89,12 @@ document.addEventListener('DOMContentLoaded', ->
 				## if none was opened yet.
 				## if a corresponding chatwindow was opened 
 				## we just append the privmsg to this window
-				console.log("we've got privmsg")
 				appendToRoom(ircLineIn.params[0], ircLineIn)
+
+			if ircLineIn.command == "JOIN"
+				## server let us join a room
+				# appendToRoom(ircLineIn.params[0], ircLineIn)		
+				openChatWindow(ircLineIn.params[0])
 				
 
 
