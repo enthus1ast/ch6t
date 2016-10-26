@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', ->
 			line = line[result.who.len+1..]
 
 		if line.search(" :") != -1 # Read trailer
-		  result.trailer = line.split(" :")[1..].join(" :") # TODO bug wenn " :" geschrieben wird??
+		  result.trailer = line.split(" :")[1..].join(" :")
 		  headerPart = line.split(" :")[0]	 # TODO bug wenn " :" geschrieben wird??
 		else
 		  result.trailer = ""
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', ->
 		window.connection = new WebSocket('ws://' + server, ['irc'])
 
 		connection.onopen = ->
-			connection.send('USER ' + user + ' * * *\n')
+			connection.send("USER #{user} * * *\n")
 			connection.send('NICK ' + nick + '\n')
 			connection.send('PONG :t\n');
 			connection.send('join #lobby\n');
@@ -97,9 +97,6 @@ document.addEventListener('DOMContentLoaded', ->
 				openChatWindow(ircLineIn.params[0])
 				
 
-
-
-			
 
 
 	main("127.0.0.1:7787","asd","astoll")

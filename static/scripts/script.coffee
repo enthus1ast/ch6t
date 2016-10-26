@@ -72,12 +72,26 @@
 # }
 
 window.clone = (obj) ->
-  if(obj is null or typeof(obj) isnt 'object')
+  if not obj? or typeof obj isnt 'object'
     return obj
-  temp = new obj.constructor()
-  for key in obj
-    temp[key] = window.clone(obj[key])
-  return temp
+
+  if obj instanceof Date
+    return new Date(obj.getTime()) 
+
+  if obj instanceof RegExp
+    flags = ''
+    flags += 'g' if obj.global?
+    flags += 'i' if obj.ignoreCase?
+    flags += 'm' if obj.multiline?
+    flags += 'y' if obj.sticky?
+    return new RegExp(obj.source, flags) 
+
+  newInstance = new obj.constructor()
+
+  for key of obj
+    newInstance[key] = clone obj[key]
+
+  return newInstance
 
 
 writeWin = {
@@ -183,7 +197,7 @@ window.openChatWindow = (roomname) ->
   if window.myLayout.root.getItemsById(roomname).length == 0
     ## there is no room, create one
 
-    newRoom = window.clone(window.chatWin2)
+    newRoom = clone(window.chatWin2)
 
 
     newRoom.id = roomname
