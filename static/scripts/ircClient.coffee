@@ -42,13 +42,13 @@ document.addEventListener('DOMContentLoaded', ->
 	window.appendToRoom = (room,ircLineIn) ->
 		## this appends a ircLineIn to a room window,
 		## query the room
-		room = ""
 
 		## generate the line
 		recvDateObj = new Date()
 		recvTime = "#{recvDateObj.getHours()}:#{recvDateObj.getMinutes()}"
 		line = "[#{recvTime}] <#{ircLineIn.who}> #{ircLineIn.trailer}"
-		roomDom = openChatWindow(ircLineIn.params[0])
+		# roomDom = openChatWindow(ircLineIn.params[0])
+		roomDom = openChatWindow(room)
 
 		div = document.createElement('div')
 		div.innerText = line
@@ -102,7 +102,14 @@ document.addEventListener('DOMContentLoaded', ->
 				## if none was opened yet.
 				## if a corresponding chatwindow was opened 
 				## we just append the privmsg to this window
-				appendToRoom(ircLineIn.params[0], ircLineIn)
+				if ircLineIn.params[0].startsWith("#") or ircLineIn.params[0].startsWith("&")
+					# this is a msg to a room
+					console.log("msg to room")					
+					appendToRoom(ircLineIn.params[0], ircLineIn)
+				else
+					# this is a message directly to us.
+					console.log("private msg")
+					appendToRoom(ircLineIn.who,ircLineIn)
 
 			if ircLineIn.command == "JOIN"
 				## server let us join a room
