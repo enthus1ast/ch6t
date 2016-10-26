@@ -102,9 +102,10 @@ window.config = {
   settings: {
     hasHeaders: true
     showPopoutIcon: false
+    showExitIcon: true
   }
   content: [{
-    type: 'column'
+    type: 'stack'
     # content: [menu,serverWindow,serverWindow2,serverWindow]
     content: [window.menu,serverWindow2]
   }]
@@ -122,11 +123,8 @@ window.openChatWindow = (roomname) ->
   ## this creates or returns a handle to the
   ## chat window / channel `roomname`
   if window.myLayout.root.getItemsById(roomname).length == 0
-    ## there is no room, create one
-
+    ## there is no room widged, create one
     newRoom = clone(window.chatWin2)
-
-
     newRoom.id = roomname
     newRoom.title = roomname
     newRoom.componentState.room = roomname
@@ -153,9 +151,12 @@ window.myLayout.registerComponent('privateWindow', (container, state) ->
     msg = privateWindow.querySelector("input").value
     window.sendFunction(msg, state.room)
     privateWindow.querySelector("input").value = ""
-    div = document.createElement('div')
-    div.innerText = msg
-    privateWindow.querySelector(".output").appendChild(div)
+
+    appendToRoom(state.room, {who:"", trailer: msg, params: [state.room]})
+    #div = document.createElement('div')
+    #div.innerText = msg
+    #privateWindow.querySelector(".output").appendChild(div)
+
     privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
 
   privateWindow.querySelector("button").onclick = ->
