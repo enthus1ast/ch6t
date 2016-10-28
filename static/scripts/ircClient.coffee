@@ -1,9 +1,5 @@
 # countdown = (num for num in [10..1199])
 
-
-# class Channels
-# class Channel
-
 document.addEventListener('DOMContentLoaded', ->
 
   server = myLayout.root.getItemsById('server')[0]
@@ -137,4 +133,5 @@ document.addEventListener('DOMContentLoaded', ->
         appendStatusMessage(ircLineIn.params[2],  m("353", ircLineIn.trailer )) # m("353", ircLineIn.who, ircLineIn.params[0]))
 
   main("127.0.0.1:7787","asd","astoll")
+
 )
