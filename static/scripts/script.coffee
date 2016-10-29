@@ -33,7 +33,7 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     window.sendFunction(msg, state.room)
     privateWindow.querySelector("input").value = ""
 
-    appendToRoom(state.room, {who: "", trailer: msg, params: [state.room]})
+    window.appendToRoom(state.room, {who: "", trailer: msg, params: [state.room]})
 
     privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
 
@@ -72,8 +72,8 @@ window.goldenLayout.init()
 ## FUNCTIONS ch6t
 window.openChannelWindow = (roomname) ->
   ###
-    this creates or returns a handle to the
-    chat window / channel `roomname`
+  this creates or returns a handle to the
+  chat window / channel `roomname`
   ###
   if window.goldenLayout.root.getItemsById(roomname).length == 0
     # there is no room widged, create one

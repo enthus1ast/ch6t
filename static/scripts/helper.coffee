@@ -19,3 +19,10 @@ window.clone = (obj) ->
     newInstance[key] = clone obj[key]
 
   return newInstance
+
+
+window.removeDoubleWhite = (line) ->
+  if line.search("  ") != -1
+    removeDoubleWhite(line.replace("  "," "))
+  else
+    return line
