@@ -27,6 +27,7 @@ window.goldenLayout.registerComponent('ChannelWindow', (container, state) ->
 window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
   container._config.title = state.room
   privateWindow = document.querySelector('#templates > [name="privateWindow"]').cloneNode(true)
+  container.getElement().html(privateWindow)
 
   getDataAndClean = ->
     msg = privateWindow.querySelector("input").value
@@ -44,20 +45,31 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     if ( event.which == 13 )
       getDataAndClean()
 
-  container.getElement().html(privateWindow)
 )
 
 
 window.goldenLayout.registerComponent('MenuWindow', (container, state) ->
   menu = document.querySelector('#templates > [name="menu"]').cloneNode(true)
   container.getElement().html(menu)
+
+  server = container.getElement()[0].querySelector('input[name="server"]')
+  port = container.getElement()[0].querySelector('input[name="port"]')
+  user = container.getElement()[0].querySelector('input[name="user"]')
+  nick = container.getElement()[0].querySelector('input[name="nick"]')
+  channel = container.getElement()[0].querySelector('input[name="channel"]')
+  joinOnConnect = container.getElement()[0].querySelector('input[name="joinOnConnect"]')
+
   container.getElement()[0].querySelector('button[name="connect"]').onclick = ->
-    alert "Connect"
+    if joinOnConnect.checked
+      main("#{server.value}:#{port.value}", user.value, nick.value, channel.value)
+    else
+      main("#{server.value}:#{port.value}", user.value, nick.value)
+
+
 
   container.getElement()[0].querySelector('button[name="join"]').onclick = ->
-    roomToJoin = container.getElement()[0].querySelector('input[name="room"]')
-    sendFunction("/join " + roomToJoin.value)
-    roomToJoin.value = ""
+    sendFunction("/join #{channel.value}")
+    channel.value = ""
 )
 ## REGISTER END
 

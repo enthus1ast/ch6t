@@ -8,7 +8,7 @@ window.m = (msg, param1, param2) ->
 		"part": "'#{param1}' have left channel #{param2}"
 		"nick": "'#{param1}' is now know as '#{param2}'"
 		"quit": "Connection to server lost"
-		"353" : "Users: #{param1}"
+		"353": "Users: #{param1}"
 
 	# messages.de =
 	# 	"join": "Raum #{param1} betreten"

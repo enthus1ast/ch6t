@@ -57,25 +57,21 @@ window.appendToRoom = (room, ircLineIn) ->
 
 
 
-## DOMCONTENTLOADED IRC
-document.addEventListener('DOMContentLoaded', ->
-  main("127.0.0.1:7787","asd","astoll")
-)
-## DOMCONTENTLOADED END
-
-
-
 ## MAIN Function
-main = (server, user, nick) ->
+main = (server, user, nick, channel) ->
   serverWindow = goldenLayout.root.getItemsById('server')
   serverWindowOutput = serverWindow[0].element[0].querySelector('.output')
-  window.connection = new WebSocket('ws://' + server, ['irc'])
+  window.connection = new WebSocket("ws://#{server}", ['irc'])
 
   window.connection.onopen = ->
+    console.log '##############################################################################################################################################################################################################################################################################################################################################################'
     window.connection.send("USER #{user} * * *\n")
-    window.connection.send('NICK ' + nick + '\n')
+    window.connection.send("NICK #{nick}\n")
     window.connection.send('PONG :t\n')
-    window.connection.send('join #lobby\n')
+    if channel?
+      console.log "JOIN #{channel}\n"
+      window.connection.send("JOIN #{channel}\n")
+
 
   window.connection.onmessage = (event) ->
     console.log('Server: ' + event.data)
