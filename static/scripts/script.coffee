@@ -34,7 +34,7 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     window.sendFunction(msg, state.room)
     privateWindow.querySelector("input").value = ""
 
-    window.appendToRoom(state.room, {who: "", trailer: msg, params: [state.room]})
+    window.appendToRoom(state.room, {who: window.ownUsername, trailer: msg, params: [state.room]})
 
     privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
 
@@ -93,6 +93,9 @@ window.openChannelWindow = (roomname) ->
     room.id = roomname
     room.title = roomname
     room.componentState.room = roomname
+    
+    # room.itemDestroyed = (a,b,c) ->
+    #   window.connection.send("part #{room.title}\n")
     window.goldenLayout.root.contentItems[0].addChild(room)
     return window.goldenLayout.root.getItemsById(roomname)[0]
   else
@@ -106,3 +109,11 @@ window.sendFunction = (msg, room) ->
   else
     window.connection.send("privmsg #{room} :#{msg}\n")
 ## FUNCTIONS END
+
+
+window.goldenLayout.on( "itemDestroyed" , (component,b,c,d) -> 
+  if component.componentName == "PrivateWindow"
+    roomname = component.config.componentState.room
+    window.connection.send("PART #{roomname}\n")
+
+,null)
