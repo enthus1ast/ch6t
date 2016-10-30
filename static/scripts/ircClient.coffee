@@ -49,6 +49,7 @@ window.appendToRoom = (room, ircLineIn) ->
 
   div = document.createElement('div')
   div.innerText = line
+  div.style.color = computeColor(ircLineIn.who)
 
   roomDomOutput = roomDom.element[0].querySelector('.output')
   roomDomOutput.appendChild(div)
@@ -58,7 +59,7 @@ window.appendToRoom = (room, ircLineIn) ->
 
 
 ## MAIN Function
-main = (server, user, nick, channel) ->
+window.main = (server, user, nick, channel) ->
   serverWindow = goldenLayout.root.getItemsById('server')
   serverWindowOutput = serverWindow[0].element[0].querySelector('.output')
   window.connection = new WebSocket("ws://#{server}", ['irc'])

@@ -54,11 +54,10 @@ input {
 .window {
   width: 100%;
   height: 100%;
-  background-color: red;
+  background-color: #101919;
 }
 .window .upper {
   height: calc(100% - 25px);
-  background-color: brown;
 }
 
 .window .output {

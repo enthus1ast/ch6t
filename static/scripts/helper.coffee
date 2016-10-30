@@ -1,3 +1,14 @@
+window.computeColor  = (str) ->
+  commulated=0;
+  for i in [0..str.length-1]
+    commulated = commulated + str.charCodeAt(i)
+  communist = commulated%235 + 20
+  r = communist
+  g = Math.pow(communist,2)%255
+  b = Math.pow(communist,3)%255
+  return "rgb(#{r},#{g},#{b})"
+
+
 window.clone = (obj) ->
   if not obj? or typeof obj isnt 'object'
     return obj
