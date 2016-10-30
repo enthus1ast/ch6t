@@ -1,4 +1,4 @@
-Templates = {}
+window.Templates = {}
 
 class Templates.BaseWindow
   constructor: ->
