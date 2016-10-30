@@ -21,11 +21,14 @@
 
     <div name="menu">
       <span name="ch6t">ch6t</span>
-      <input name="user" type="text" placeholder="User.."><!--
-      --><input name="nick" type="text" placeholder="Nick.."><!--
+      <input name="server" type="text" value="127.0.0.1" placeholder="Server.."><!--
+      --><input name="port" type="text" value="7787" placeholder="Port.."><!--
+      --><input name="user" type="text" value="TestUSER" placeholder="User.."><!--
+      --><input name="nick" type="text" value="TestNICK" placeholder="Nick.."><!--
       --><button name="connect">Connect</button><!--
-      --><input name="room" type="text" placeholder="Room.."><!--
-      --><button name="join">Join</button>
+      --><input name="channel" type="text" value="#lobby" placeholder="Channel.."><!--
+      --><button name="join">Join</button><!--
+      --><label><input type="checkbox" name="joinOnConnect" checked="checked">Join Channel on Connect?</label>
     </div>
 
 
@@ -68,6 +71,7 @@
   </div>
 
 
+  <script type="text/javascript" src="static/scripts/helper.js"></script>
   <script type="text/javascript" src="static/scripts/templates.js"></script>
   <script type="text/javascript" src="static/scripts/script.js"></script>
 	<script type="text/javascript" src="static/scripts/ircClient.js"></script>

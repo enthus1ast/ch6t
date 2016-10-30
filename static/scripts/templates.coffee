@@ -62,18 +62,3 @@ class Templates.ServerWindow extends Templates.BaseWindow
         content: [new Templates.PrivateWindow().AsDict]
       }]
     }]
-
-
-
-
-
-window.config =
-  settings:
-    hasHeaders: true
-    showPopoutIcon: false
-    showExitIcon: true
-  content: [{
-    type: 'stack'
-    # content: [menu,serverWindow,serverWindow2,serverWindow]
-    content: [new Templates.MenuWindow().AsDict, new Templates.ServerWindow().AsDict]
-  }]
