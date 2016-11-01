@@ -1,3 +1,6 @@
+window.MAX_HISTORY = 5 # the maximal history lenght for each room
+
+
 ## CONFIG/DECLARE GoldenLayout
 config =
   settings:
@@ -40,6 +43,8 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
 
     # add to send history
     window.rooms[state.room].history.push(msg)
+    if window.rooms[state.room].history.length > MAX_HISTORY # if we are over the maximal history the user wants to save
+      window.rooms[state.room].history.shift() # remove the first item
     window.rooms[state.room].actualHistoryPosition = 0 # reset the position on send
 
 
