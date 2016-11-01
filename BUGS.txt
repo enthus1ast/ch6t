@@ -1,0 +1,7 @@
+[] client js is dying on strange messages:
+    WebSocket connection to 'ws://127.0.0.1:7789/' failed: Could not decode a text frame as UTF-8.
+
+    Skip invalide utf-8 chars send by ms crap
+
+
+

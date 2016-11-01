@@ -1,4 +1,4 @@
-window.MAX_HISTORY = 5 # the maximal history lenght for each room
+window.MAX_HISTORY = 20 # the maximal history lenght for each room
 
 
 ## CONFIG/DECLARE GoldenLayout
@@ -120,8 +120,6 @@ window.openChannelWindow = (roomname) ->
     room.actualHistoryPosition = 0
     rooms[room.title] = room
     
-    # room.itemDestroyed = (a,b,c) ->
-    #   window.connection.send("part #{room.title}\n")
     window.goldenLayout.root.contentItems[0].addChild(room)
     return window.goldenLayout.root.getItemsById(roomname)[0]
   else
@@ -141,6 +139,6 @@ window.goldenLayout.on( "itemDestroyed" , (component,b,c,d) ->
   if component.componentName == "PrivateWindow"
     roomname = component.config.componentState.room
     window.connection.send("PART #{roomname}\n")
-    delete(window.rooms[roomname])
+    delete(window.rooms[roomname]) # we remove the room from the room list
 
 ,null)
