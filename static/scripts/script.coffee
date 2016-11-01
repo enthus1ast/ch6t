@@ -36,8 +36,10 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     window.appendToRoom(state.room, {who: window.ownUsername, trailer: msg, params: [state.room]})
     privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
 
+
     # add to send history
     window.rooms[state.room].history.push(msg)
+    window.rooms[state.room].actualHistoryPosition = 0 # reset the position on send
 
 
   privateWindow.querySelector("button").onclick = ->
@@ -47,11 +49,25 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     if ( event.which == 13 ) # enter
       getDataAndClean()
     else if ( event.which == 38) # up
-      console.log("up key pressed")
-    else if ( event.which == 40) # down
-      console.log("down key pressed")
+      # if window.rooms[state.room].history.length >
 
-    # console.log(event.which)
+      # History for the input line
+      # if not window.rooms[state.room].actualHistoryPosition +1 >
+      window.rooms[state.room].actualHistoryPosition += 1
+      historyItem =  window.rooms[state.room].history[ window.rooms[state.room].history.length - window.rooms[state.room].actualHistoryPosition ]
+      privateWindow.querySelector("input").value = historyItem
+
+      console.log("up key pressed", window.rooms[state.room].actualHistoryPosition)
+    else if ( event.which == 40) # down
+      # History for the input line
+      window.rooms[state.room].actualHistoryPosition -= 1
+      historyItem =  window.rooms[state.room].history[ window.rooms[state.room].history.length - window.rooms[state.room].actualHistoryPosition ]
+      privateWindow.querySelector("input").value = historyItem      
+      console.log("down key pressed", window.rooms[state.room].actualHistoryPosition)
+
+
+    console.log(state)
+    # console.log(event)
 
 )
 
@@ -102,6 +118,7 @@ window.openChannelWindow = (roomname) ->
     room.id = roomname
     room.title = roomname
     room.componentState.room = roomname
+    room.actualHistoryPosition = 0
     rooms[room.title] = room
     
     # room.itemDestroyed = (a,b,c) ->
