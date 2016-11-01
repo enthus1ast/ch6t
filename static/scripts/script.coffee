@@ -33,17 +33,25 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     msg = privateWindow.querySelector("input").value
     window.sendFunction(msg, state.room)
     privateWindow.querySelector("input").value = ""
-
     window.appendToRoom(state.room, {who: window.ownUsername, trailer: msg, params: [state.room]})
-
     privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
+
+    # add to send history
+    window.rooms[state.room].history.push(msg)
+
 
   privateWindow.querySelector("button").onclick = ->
     getDataAndClean()
 
   privateWindow.querySelector("input").onkeyup = (event) ->
-    if ( event.which == 13 )
+    if ( event.which == 13 ) # enter
       getDataAndClean()
+    else if ( event.which == 38) # up
+      console.log("up key pressed")
+    else if ( event.which == 40) # down
+      console.log("down key pressed")
+
+    # console.log(event.which)
 
 )
 
@@ -90,6 +98,7 @@ window.openChannelWindow = (roomname) ->
   if roomname not in rooms and window.goldenLayout.root.getItemsById(roomname).length == 0
     # there is no room widged, create one
     room = new window.Templates.PrivateWindow().AsDict
+    room.history = []
     room.id = roomname
     room.title = roomname
     room.componentState.room = roomname
@@ -115,7 +124,7 @@ window.sendFunction = (msg, room) ->
 window.goldenLayout.on( "itemDestroyed" , (component,b,c,d) -> 
   if component.componentName == "PrivateWindow"
     roomname = component.config.componentState.room
-    delete(window.room[roomname])
     window.connection.send("PART #{roomname}\n")
+    delete(window.rooms[roomname])
 
 ,null)

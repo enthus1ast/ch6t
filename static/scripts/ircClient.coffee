@@ -89,8 +89,8 @@ window.main = (server, user, nick, channel) ->
   window.ownUsername = "" # this is our username, we try to change this value on T001 and on TNick
   window.rooms = {
     name: {
-      users:[],
-      
+      users:[],   # this is just an example
+      history: []     # this is just an example
     }
   }
 
