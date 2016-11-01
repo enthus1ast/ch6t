@@ -63,11 +63,10 @@ window.appendToRoom = (room, ircLineIn) ->
   line = "[#{recvTime}] <#{nickname}> #{ircLineIn.trailer}"
   roomDom = window.openChannelWindow(room)
 
-
   div = document.createElement('div')
-  div.innerText = line
+  # div.innerText = line.autoLink()
+  div.innerHTML = escapeHtml(line).autoLink()
   
-
   #if we where mentioned in a message we highlight it
   console.log(ircLineIn.trailer)
   if ircLineIn.trailer.search(window.ownUsername) != -1
@@ -82,14 +81,18 @@ window.appendToRoom = (room, ircLineIn) ->
   roomDomOutput.scrollTop = roomDomOutput.scrollHeight
 ## FUNCTIONS END
 
-
-
 ## MAIN Function
 window.main = (server, user, nick, channel) ->
   serverWindow = goldenLayout.root.getItemsById('server')
   serverWindowOutput = serverWindow[0].element[0].querySelector('.output')
   window.connection = new WebSocket("ws://#{server}", ['irc'])
-  window.ownUsername = ""
+  window.ownUsername = "" # this is our username, we try to change this value on T001 and on TNick
+  window.rooms = {
+    name: {
+      users:[],
+      
+    }
+  }
 
   window.connection.onopen = ->
     window.connection.send("USER #{user} * * *\n")
@@ -98,7 +101,6 @@ window.main = (server, user, nick, channel) ->
     if channel?
       console.log "JOIN #{channel}\n"
       window.connection.send("JOIN #{channel}\n")
-
 
   window.connection.onmessage = (event) ->
     console.log('Server: ' + event.data)

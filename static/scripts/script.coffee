@@ -87,12 +87,13 @@ window.openChannelWindow = (roomname) ->
   this creates or returns a handle to the
   chat window / channel `roomname`
   ###
-  if window.goldenLayout.root.getItemsById(roomname).length == 0
+  if roomname not in rooms and window.goldenLayout.root.getItemsById(roomname).length == 0
     # there is no room widged, create one
     room = new window.Templates.PrivateWindow().AsDict
     room.id = roomname
     room.title = roomname
     room.componentState.room = roomname
+    rooms[room.title] = room
     
     # room.itemDestroyed = (a,b,c) ->
     #   window.connection.send("part #{room.title}\n")
@@ -114,6 +115,7 @@ window.sendFunction = (msg, room) ->
 window.goldenLayout.on( "itemDestroyed" , (component,b,c,d) -> 
   if component.componentName == "PrivateWindow"
     roomname = component.config.componentState.room
+    delete(window.room[roomname])
     window.connection.send("PART #{roomname}\n")
 
 ,null)
