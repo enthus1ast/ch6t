@@ -24,6 +24,7 @@ window.goldenLayout.registerComponent('ChannelWindow', (container, state) ->
 )
 
 
+
 window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
   container._config.title = state.room
   privateWindow = document.querySelector('#templates > [name="privateWindow"]').cloneNode(true)
@@ -49,26 +50,19 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     if ( event.which == 13 ) # enter
       getDataAndClean()
     else if ( event.which == 38) # up
-      # if window.rooms[state.room].history.length >
-
       # History for the input line
-      # if not window.rooms[state.room].actualHistoryPosition +1 >
-      window.rooms[state.room].actualHistoryPosition += 1
-      historyItem =  window.rooms[state.room].history[ window.rooms[state.room].history.length - window.rooms[state.room].actualHistoryPosition ]
-      privateWindow.querySelector("input").value = historyItem
-
-      console.log("up key pressed", window.rooms[state.room].actualHistoryPosition)
+      if window.rooms[state.room].actualHistoryPosition < window.rooms[state.room].history.length
+        window.rooms[state.room].actualHistoryPosition += 1
+        historyItem =  window.rooms[state.room].history[ window.rooms[state.room].history.length - window.rooms[state.room].actualHistoryPosition ]
+        privateWindow.querySelector("input").value = historyItem
+      # console.log("up key pressed", window.rooms[state.room].actualHistoryPosition)
     else if ( event.which == 40) # down
       # History for the input line
-      window.rooms[state.room].actualHistoryPosition -= 1
-      historyItem =  window.rooms[state.room].history[ window.rooms[state.room].history.length - window.rooms[state.room].actualHistoryPosition ]
-      privateWindow.querySelector("input").value = historyItem      
-      console.log("down key pressed", window.rooms[state.room].actualHistoryPosition)
-
-
-    console.log(state)
-    # console.log(event)
-
+      if window.rooms[state.room].actualHistoryPosition > 0
+        window.rooms[state.room].actualHistoryPosition -= 1
+        historyItem =  window.rooms[state.room].history[ window.rooms[state.room].history.length - window.rooms[state.room].actualHistoryPosition ]
+        privateWindow.querySelector("input").value = historyItem or ""     
+      # console.log("down key pressed", window.rooms[state.room].actualHistoryPosition)
 )
 
 
