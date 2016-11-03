@@ -8,13 +8,10 @@ window.PING_TIMEOUT = 10000 # seconds
 
 window.reconnectOnPingTimeout = () ->
   setTimeout(() ->
-    console.log("set timeout")
-
-    window.connection.send("PING :ch6t_#{new Date().getTime()}\n")
+    if new Date().getTime() - window.lastSeenPong > PING_INTERVAL
+      window.connection.send("PING :ch6t_#{new Date().getTime()}\n")
     if new Date().getTime() - window.lastSeenPong > PING_TIMEOUT
       console.log("WE HAVE TIMEOUTEDD!!!!!!!!")
-
-    # console.log("we are not connected yet, so cant send ping...") ## TODO
     window.reconnectOnPingTimeout()
   ,
   window.PING_INTERVAL)
@@ -146,6 +143,7 @@ window.main = (server, user, nick, channel) ->
       # if a corresponding chatwindow was opened
       # we just append the privmsg to this window
       window.lastSeenPong = new Date().getTime()
+      console.log("Reset lastSeenPong to: #{window.lastSeenPong}")
       if ircLineIn.params[0].startsWith("#") or ircLineIn.params[0].startsWith("&")
         # this is a msg to a room
         console.log("msg to room")
