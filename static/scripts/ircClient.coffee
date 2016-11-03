@@ -1,9 +1,23 @@
 
 window.lastSentPing = 0
 window.lastSeenPong = 0
+window.PING_INTERVAL = 5000 
 window.PING_TIMEOUT = 10000 # seconds
 
 # new Date().getTime()
+
+window.reconnectOnPingTimeout = () ->
+  setTimeout(() ->
+    console.log("set timeout")
+
+    window.connection.send("PING :ch6t_#{new Date().getTime()}\n")
+    if new Date().getTime() - window.lastSeenPong > PING_TIMEOUT
+      console.log("WE HAVE TIMEOUTEDD!!!!!!!!")
+
+    # console.log("we are not connected yet, so cant send ping...") ## TODO
+    window.reconnectOnPingTimeout()
+  ,
+  window.PING_INTERVAL)
 
 
 ## FUNCTIONS IRC
@@ -109,6 +123,7 @@ window.main = (server, user, nick, channel) ->
     if channel?
       console.log "JOIN #{channel}\n"
       window.connection.send("JOIN #{channel}\n")
+    window.reconnectOnPingTimeout()
 
   window.connection.onmessage = (event) ->
     console.log('Server: ' + event.data)
@@ -182,19 +197,4 @@ window.main = (server, user, nick, channel) ->
       # this means we have sent a ping before
       window.lastSeenPong = new Date().getTime()
 
-window.reconnectOnPingTimeout = () ->
-  setTimeout(() ->
-    console.log("set timeout")
-    try
-      window.connection.send("PING :#{new Date().getTime()}\n")
-      if new Date().getTime() - window.lastSeenPong > PING_TIMEOUT
-        console.log("WE HAVE TIMEOUTEDD!!!!!!!!")
-    except:
-      console.log("we are not connected yet, so cant send ping...") ## TODO
-    window.reconnectOnPingTimeout()
-  ,
-  5000)
-  
-window.reconnectOnPingTimeout()
-# window.connection.send("PING\n")
 ## MAIN END
