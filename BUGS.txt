@@ -4,4 +4,9 @@
     Skip invalide utf-8 chars send by ms crap
 
 
+[] hour/minute gets not prefixed with '0'
 
+[] ton
+[] farbe ändern
+[] layout speichern
+[] rejoin/reconnect

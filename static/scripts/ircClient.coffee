@@ -1,3 +1,11 @@
+
+window.lastSentPing = 0
+window.lastSeenPong = 0
+window.PING_TIMEOUT = 10000 # seconds
+
+# new Date().getTime()
+
+
 ## FUNCTIONS IRC
 window.parseIncoming = (rawline) ->
   result = {}
@@ -122,6 +130,7 @@ window.main = (server, user, nick, channel) ->
       # we have to open a chat if none was opened yet.
       # if a corresponding chatwindow was opened
       # we just append the privmsg to this window
+      window.lastSeenPong = new Date().getTime()
       if ircLineIn.params[0].startsWith("#") or ircLineIn.params[0].startsWith("&")
         # this is a msg to a room
         console.log("msg to room")
@@ -166,4 +175,26 @@ window.main = (server, user, nick, channel) ->
       # normally the first param should be our username
       # if ircLineIn.paras.length > 0
       window.ownUsername = ircLineIn.params[0]
+      window.lastSeenPong = new Date().getTime()
+
+    if ircLineIn.command == "PONG" #or ircLineIn.command == "PING"
+      # we receive a pong reply from the server
+      # this means we have sent a ping before
+      window.lastSeenPong = new Date().getTime()
+
+window.reconnectOnPingTimeout = () ->
+  setTimeout(() ->
+    console.log("set timeout")
+    try
+      window.connection.send("PING :#{new Date().getTime()}\n")
+      if new Date().getTime() - window.lastSeenPong > PING_TIMEOUT
+        console.log("WE HAVE TIMEOUTEDD!!!!!!!!")
+    except:
+      console.log("we are not connected yet, so cant send ping...") ## TODO
+    window.reconnectOnPingTimeout()
+  ,
+  5000)
+  
+window.reconnectOnPingTimeout()
+# window.connection.send("PING\n")
 ## MAIN END
