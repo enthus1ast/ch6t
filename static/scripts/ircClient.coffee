@@ -1,8 +1,8 @@
 
 window.lastSentPing = 0
 window.lastSeenPong = 0
-window.PING_INTERVAL = 5000 
-window.PING_TIMEOUT = 10000 # seconds
+window.PING_INTERVAL = 60 * 1000 
+window.PING_TIMEOUT = window.PING_INTERVAL * 2 # seconds
 
 # new Date().getTime()
 
@@ -84,7 +84,17 @@ window.appendToRoom = (room, ircLineIn) ->
 
   div = document.createElement('div')
   # div.innerText = line.autoLink()
-  div.innerHTML = escapeHtml(line).autoLink()
+  div.innerHTML = escapeHtml(line).autoLink(
+    callback: (url) -> 
+      if /\.(gif|png|jpe?g)$/i.test(url)
+        return '<img src="' + url + '">';
+
+      if /\.(mp4|avi|webm|flv|mkv)$/i.test(url)
+        return '<video src="' + url + '" controls>';        
+
+      if /\.(mp3|wav|ogg|opus)$/i.test(url)
+        return '<audio src="' + url + '" controls>';           
+  )
   
   #if we where mentioned in a message we highlight it
   console.log(ircLineIn.trailer)
