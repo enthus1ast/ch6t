@@ -78,7 +78,7 @@ window.appendToRoom = (room, ircLineIn) ->
   # generate the line
   recvDateObj = new Date()
   nickname = splitUser(ircLineIn.who).nick
-  recvTime = "#{recvDateObj.getHours()}:#{recvDateObj.getMinutes()}"
+  recvTime = "#{pad(recvDateObj.getHours(),2)}:#{pad(recvDateObj.getMinutes(),2)}"
   line = "[#{recvTime}] <#{nickname}> #{ircLineIn.trailer}"
   roomDom = window.openChannelWindow(room)
 
@@ -86,6 +86,7 @@ window.appendToRoom = (room, ircLineIn) ->
   # div.innerText = line.autoLink()
   div.innerHTML = escapeHtml(line).autoLink(
     callback: (url) -> 
+      url = decodeURI(url)
       if /\.(gif|png|jpe?g)$/i.test(url)
         return '<img src="' + url + '">';
 
@@ -152,6 +153,7 @@ window.main = (server, user, nick, channel) ->
       # we have to open a chat if none was opened yet.
       # if a corresponding chatwindow was opened
       # we just append the privmsg to this window
+      bing("msg")
       window.lastSeenPong = new Date().getTime()
       console.log("Reset lastSeenPong to: #{window.lastSeenPong}")
       if ircLineIn.params[0].startsWith("#") or ircLineIn.params[0].startsWith("&")
@@ -167,12 +169,14 @@ window.main = (server, user, nick, channel) ->
       # server let us join a room
       openChannelWindow(ircLineIn.params[0])
       appendStatusMessage(ircLineIn.params[0], m("join", ircLineIn.who , ircLineIn.params[0]))
+      bing("join")
 
     if ircLineIn.command == "PART"
       # we write in the room
       # that the user has left
       # :klausuggu PART #lobby
       appendStatusMessage(ircLineIn.params[0], m("part", ircLineIn.who, ircLineIn.params[0]))
+      bing("leave")
 
     if ircLineIn.command == "NICK"
       # :ha NICK :sn0re

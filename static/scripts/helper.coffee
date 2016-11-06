@@ -46,3 +46,26 @@ window.removeDoubleWhite = (line) ->
     removeDoubleWhite(line.replace("  "," "))
   else
     return line
+
+
+window.bing = (type) ->
+  if type == "msg"
+    aud = document.getElementById('audioChatMessage');
+    aud.volume = 1;
+    aud.play();   
+  
+  if type == "join"
+    aud = document.getElementById('audioChatJoin');
+    aud.volume = 0.5;
+    aud.play();   
+  
+  if type == "leave"
+    aud = document.getElementById('audioChatLeave');
+    aud.volume = 0.5;
+    aud.play();   
+
+window.pad = (num, size) ->
+    s = num+""
+    while (s.length < size) 
+      s = "0" + s
+    return s

@@ -48,7 +48,30 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     window.rooms[state.room].actualHistoryPosition = 0 # reset the position on send
 
 
+  # privateWindow.addEventListener("resize", () ->
+    # console.log("resize")
+  # )
+
+  # $(privateWindow).resize(() ->
+  #   console.log("resize")
+  # ) 
+
+  window.onresize = (event) ->
+    console.log("WindowResized")
+    $(".output").scrollTop(Number.MAX_VALUE)
+
+  $(".lm_item").resize(() ->
+    console.log("resize")
+  )
+
+  # privateWindow.parentElement.parentElement.parentElement.onresize = ->
+  #   # $("#divChatWindow").scrollTop($("#divChatWindow")[0].scrollHeight);    
+    # console.log("resized privateWindow")
+
+
   privateWindow.querySelector("button").onclick = ->
+    console.log(privateWindow)
+    # console.log(privateWindow.querySelector(".lm_item"))
     getDataAndClean()
 
   privateWindow.querySelector("input").onkeyup = (event) ->
@@ -140,5 +163,8 @@ window.goldenLayout.on( "itemDestroyed" , (component,b,c,d) ->
     roomname = component.config.componentState.room
     window.connection.send("PART #{roomname}\n")
     delete(window.rooms[roomname]) # we remove the room from the room list
+,null)
 
+window.goldenLayout.on("activeContentItemChanged ", (a,b,c,d) ->
+  console.log(a,b,c,d)
 ,null)

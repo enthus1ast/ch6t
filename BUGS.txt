@@ -1,12 +1,35 @@
-[] client js is dying on strange messages:
+[ok] client js is dying on strange messages:
     WebSocket connection to 'ws://127.0.0.1:7789/' failed: Could not decode a text frame as UTF-8.
-
     Skip invalide utf-8 chars send by ms crap
 
 
-[] hour/minute gets not prefixed with '0'
-
-[] ton
-[] farbe ändern
+[ok] hour/minute gets not prefixed with '0'
+[ok] ton
+[] settings
+[] farbe ändern vom ganzen chat (anders css laden)
 [] layout speichern
 [] rejoin/reconnect
+[] Userliste
+[] Alert (vibration) 
+[] Runterscrollen beim scalieren
+[] Nur scrollen wenn nich ganz unten
+[] Fenster programmatisch anordnen (zeilen und spalten)
+[] Fenster position speichern
+  -> rejoin
+[] autofocus auf created room chat leiste
+[] nachrichten speichern (im )
+[] umbenennen nachricht (nick) wird nicht angezeigt
+
+[->ok] Schach spielen
+[] Magic spielen
+
+
+
+
+
+http://games.code0.xyz/oome/client/static/music/sphere2.ogg
+http://games.code0.xyz/oome/client/static/music/misc2min.ogg
+http://games.code0.xyz/oome/client/static/music/misc1.ogg
+http://games.code0.xyz/oome/client/static/music/battle2.ogg
+http://games.code0.xyz/oome/client/static/music/battle1_1.ogg
+http://games.code0.xyz/oome/client/static/music/battle1.ogg
