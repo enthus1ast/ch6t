@@ -38,7 +38,7 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
     window.sendFunction(msg, state.room)
     privateWindow.querySelector("input").value = ""
     window.appendToRoom(state.room, {who: window.ownUsername, trailer: msg, params: [state.room]})
-    privateWindow.querySelector(".output").scrollTop = privateWindow.querySelector(".output").scrollHeight
+    window.scrollElement(privateWindow.querySelector(".output"))
 
 
     # add to send history
@@ -57,17 +57,8 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
   # )
 
   window.onresize = (event) ->
-    console.log("WindowResized")
-    $(".output").scrollTop(Number.MAX_VALUE)
-
-  $(".lm_item").resize(->
-    console.log("resize")
-  )
-
-  # privateWindow.parentElement.parentElement.parentElement.onresize = ->
-  #   # $("#divChatWindow").scrollTop($("#divChatWindow")[0].scrollHeight);
-    # console.log("resized privateWindow")
-
+    window.scrollElement(document.querySelectorAll('.output'))
+    return
 
   privateWindow.querySelector("button").onclick = ->
     console.log(privateWindow)
@@ -107,9 +98,9 @@ window.goldenLayout.registerComponent('MenuWindow', (container, state) ->
 
   container.getElement()[0].querySelector('button[name="connect"]').onclick = ->
     if joinOnConnect.checked
-      main("#{server.value}:#{port.value}", user.value, nick.value, channel.value)
+      window.main("#{server.value}:#{port.value}", user.value, nick.value, channel.value)
     else
-      main("#{server.value}:#{port.value}", user.value, nick.value)
+      window.main("#{server.value}:#{port.value}", user.value, nick.value)
 
 
 

@@ -143,7 +143,7 @@ window.main = (server, user, nick, channel) ->
     div = document.createElement('div')
     div.innerText = event.data
     serverWindowOutput.appendChild(div)
-    serverWindowOutput.scrollTop = serverWindowOutput.scrollHeight
+    window.scrollElement(serverWindowOutput)
 
     # handle ping
     if event.data.startsWith("PING")

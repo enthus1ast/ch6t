@@ -70,16 +70,54 @@ window.pad = (num, size) ->
       s = "0" + s
     return s
 
-window.scrollElement = (element, percent) ->
+window.scrollElement = (element, percent, dryrun) ->
   ###
-  element = element to scroll
-  percent: int = percent when to scorll (from top to bottom)
+  Scroll one element, if necessary
+    element: Node = element to scroll
+    percent: int = percent when to scorll (from top to bottom)
   ###
   percent = percent || 80
   percent = percent / 100
 
+  dryrun = dryrun || false
+
+
   heightToScroll = (element.scrollHeight * percent) - element.clientHeight
 
-  if Math.floor(element.scrollTop) >= Math.floor(heightToScroll)
-    element.scrollTop = element.scrollHeight
-  return
+  if dryrun is false
+    if Math.floor(element.scrollTop) >= Math.floor(heightToScroll)
+        element.scrollTop = element.scrollHeight
+  else
+    if Math.floor(element.scrollTop) >= Math.floor(heightToScroll)
+      return true
+    else
+      return false
+
+  return true
+
+window.scrollElements = (elements, percent) ->
+  ###
+  Scroll multiple elements, if necessary
+    elements: NodeList || Array of Node = elements to scroll
+    percent: int = percent when to scorll (from top to bottom)
+  ###
+  if Node.prototype.isPrototypeOf(elements)
+    elements = [elements] # Be care, this is an Array with one Node as item
+  else if NodeList.prototype.isPrototypeOf(elements) # and this a NodeList
+    # All fine
+  else
+    return false
+
+  for element in elements
+    window.scrollElement(element, percent)
+
+  return true
+
+
+window.shouldScrollElement = (element, percent) ->
+  ###
+  Indicates, if an element should be scrolled
+    element: Node = element to proof
+    percent: percent when to scroll (wont scroll)
+  ###
+  return window.scrollElement(element, percent, true)
