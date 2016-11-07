@@ -1,13 +1,13 @@
 
 window.lastSentPing = 0
 window.lastSeenPong = 0
-window.PING_INTERVAL = 60 * 1000 
+window.PING_INTERVAL = 60 * 1000
 window.PING_TIMEOUT = window.PING_INTERVAL * 2 # seconds
 
 # new Date().getTime()
 
-window.reconnectOnPingTimeout = () ->
-  setTimeout(() ->
+window.reconnectOnPingTimeout = ->
+  setTimeout(->
     if new Date().getTime() - window.lastSeenPong > PING_INTERVAL
       window.connection.send("PING :ch6t_#{new Date().getTime()}\n")
     if new Date().getTime() - window.lastSeenPong > PING_TIMEOUT
@@ -51,7 +51,7 @@ window.splitUser = (who) ->
   else
     return {
       nick: who
-      moreInfo: ""      
+      moreInfo: ""
     }
 
 
@@ -78,25 +78,25 @@ window.appendToRoom = (room, ircLineIn) ->
   # generate the line
   recvDateObj = new Date()
   nickname = splitUser(ircLineIn.who).nick
-  recvTime = "#{pad(recvDateObj.getHours(),2)}:#{pad(recvDateObj.getMinutes(),2)}"
+  recvTime = "#{pad(recvDateObj.getHours(), 2)}:#{pad(recvDateObj.getMinutes(), 2)}"
   line = "[#{recvTime}] <#{nickname}> #{ircLineIn.trailer}"
   roomDom = window.openChannelWindow(room)
 
   div = document.createElement('div')
   # div.innerText = line.autoLink()
   div.innerHTML = escapeHtml(line).autoLink(
-    callback: (url) -> 
+    callback: (url) ->
       url = decodeURI(url)
       if /\.(gif|png|jpe?g)$/i.test(url)
-        return '<img src="' + url + '">';
+        return '<img src="' + url + '">'
 
       if /\.(mp4|avi|webm|flv|mkv)$/i.test(url)
-        return '<video src="' + url + '" controls>';        
+        return '<video src="' + url + '" controls>'
 
       if /\.(mp3|wav|ogg|opus)$/i.test(url)
-        return '<audio src="' + url + '" controls>';           
+        return '<audio src="' + url + '" controls>'
   )
-  
+
   #if we where mentioned in a message we highlight it
   console.log(ircLineIn.trailer)
   if ircLineIn.trailer.search(window.ownUsername) != -1
@@ -108,7 +108,9 @@ window.appendToRoom = (room, ircLineIn) ->
 
   roomDomOutput = roomDom.element[0].querySelector('.output')
   roomDomOutput.appendChild(div)
-  roomDomOutput.scrollTop = roomDomOutput.scrollHeight
+  window.scrollElement(roomDomOutput)
+  return
+  # roomDomOutput.scrollTop = roomDomOutput.scrollHeight
 ## FUNCTIONS END
 
 ## MAIN Function
@@ -119,7 +121,7 @@ window.main = (server, user, nick, channel) ->
   window.ownUsername = "" # this is our username, we try to change this value on T001 and on TNick
   window.rooms = {
     name: {
-      users:[],   # this is just an example
+      users: [],   # this is just an example
       history: []     # this is just an example
     }
   }

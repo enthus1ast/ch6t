@@ -54,18 +54,18 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
 
   # $(privateWindow).resize(() ->
   #   console.log("resize")
-  # ) 
+  # )
 
   window.onresize = (event) ->
     console.log("WindowResized")
     $(".output").scrollTop(Number.MAX_VALUE)
 
-  $(".lm_item").resize(() ->
+  $(".lm_item").resize(->
     console.log("resize")
   )
 
   # privateWindow.parentElement.parentElement.parentElement.onresize = ->
-  #   # $("#divChatWindow").scrollTop($("#divChatWindow")[0].scrollHeight);    
+  #   # $("#divChatWindow").scrollTop($("#divChatWindow")[0].scrollHeight);
     # console.log("resized privateWindow")
 
 
@@ -89,7 +89,7 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
       if window.rooms[state.room].actualHistoryPosition > 0
         window.rooms[state.room].actualHistoryPosition -= 1
         historyItem =  window.rooms[state.room].history[ window.rooms[state.room].history.length - window.rooms[state.room].actualHistoryPosition ]
-        privateWindow.querySelector("input").value = historyItem or ""     
+        privateWindow.querySelector("input").value = historyItem or ""
       # console.log("down key pressed", window.rooms[state.room].actualHistoryPosition)
 )
 
@@ -142,7 +142,7 @@ window.openChannelWindow = (roomname) ->
     room.componentState.room = roomname
     room.actualHistoryPosition = 0
     rooms[room.title] = room
-    
+
     window.goldenLayout.root.contentItems[0].addChild(room)
     return window.goldenLayout.root.getItemsById(roomname)[0]
   else
@@ -158,7 +158,7 @@ window.sendFunction = (msg, room) ->
 ## FUNCTIONS END
 
 
-window.goldenLayout.on( "itemDestroyed" , (component,b,c,d) -> 
+window.goldenLayout.on( "itemDestroyed" , (component,b,c,d) ->
   if component.componentName == "PrivateWindow"
     roomname = component.config.componentState.room
     window.connection.send("PART #{roomname}\n")
