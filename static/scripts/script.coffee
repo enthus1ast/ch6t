@@ -35,6 +35,8 @@ window.goldenLayout.registerComponent('PrivateWindow', (container, state) ->
 
   getDataAndClean = ->
     msg = privateWindow.querySelector("input").value
+    if msg.trim() == ""
+      return
     window.sendFunction(msg, state.room)
     privateWindow.querySelector("input").value = ""
     window.appendToRoom(state.room, {who: window.ownUsername, trailer: msg, params: [state.room]})
